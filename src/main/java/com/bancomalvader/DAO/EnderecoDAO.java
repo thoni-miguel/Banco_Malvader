@@ -14,6 +14,7 @@ package com.bancomalvader.DAO;
 import com.bancomalvader.DatabaseConnection.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EnderecoDAO {
@@ -40,5 +41,19 @@ public class EnderecoDAO {
     } catch (SQLException e) {
       throw new RuntimeException("Erro ao inserir endereço: " + e.getMessage(), e);
     }
+  }
+
+  public int obterUltimoIdEndereco() {
+    String query = "SELECT MAX(id_endereco) AS id_endereco FROM endereco";
+    try (Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery()) {
+      if (rs.next()) {
+        return rs.getInt("id_endereco");
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao obter o último ID de endereço: " + e.getMessage(), e);
+    }
+    return -1; // Retorna -1 se não encontrar nenhum ID
   }
 }

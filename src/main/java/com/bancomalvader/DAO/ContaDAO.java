@@ -15,19 +15,28 @@ package com.bancomalvader.DAO;
 import com.bancomalvader.DatabaseConnection.DatabaseConnection;
 import com.bancomalvader.Model.Conta;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContaDAO {
 
   // Método para inserir uma nova conta
-  public Conta inserirConta(String numeroConta, String agencia, String tipoConta, int idCliente) {
+  public Conta inserirConta(String numeroConta, String codigoAgencia, String tipoConta, int idCliente) {
     String sql =
-        "INSERT INTO conta (numero_conta, agencia, tipo_conta, id_cliente) VALUES (?, ?, ?, ?)";
+        "INSERT INTO conta (numero_conta, id_agencia, tipo_conta, id_cliente) VALUES (?, ?, ?, ?)";
     try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
+      // Busca o ID da agência pelo código
+      AgenciaDAO agenciaDAO = new AgenciaDAO();
+      Integer idAgencia = agenciaDAO.buscarIdAgenciaPorCodigo(codigoAgencia);
+      if (idAgencia == null) {
+        throw new SQLException("Agência não encontrada com o código: " + codigoAgencia);
+      }
+
       // Configura os parâmetros
       stmt.setString(1, numeroConta);
-      stmt.setString(2, agencia);
+      stmt.setInt(2, idAgencia);
       stmt.setString(3, tipoConta);
       stmt.setInt(4, idCliente);
 
@@ -42,7 +51,7 @@ public class ContaDAO {
         if (rs.next()) {
           int idConta = rs.getInt(1);
           System.out.println("Conta criada com ID: " + idConta); // Log para debug
-          return new Conta(idConta, numeroConta, agencia, 0.00, tipoConta, idCliente);
+          return new Conta(idConta, numeroConta, codigoAgencia, 0.00, tipoConta, idCliente);
         } else {
           throw new SQLException("Falha ao obter o ID da conta inserida.");
         }
@@ -77,11 +86,12 @@ public class ContaDAO {
   public Conta buscarContaPorNomeENumero(String nomeCliente, String numeroConta) {
     String query =
         """
-                SELECT c.id_conta, c.numero_conta, c.agencia, c.saldo, c.tipo_conta, c.id_cliente,
+                SELECT c.id_conta, c.numero_conta, a.codigo_agencia, c.saldo, c.tipo_conta, c.id_cliente,
                        u.nome AS nome_cliente, u.cpf AS cpf_cliente
                 FROM conta c
                 INNER JOIN cliente cl ON c.id_cliente = cl.id_cliente
                 INNER JOIN usuario u ON cl.id_usuario = u.id_usuario
+                INNER JOIN agencia a ON c.id_agencia = a.id_agencia
                 WHERE u.nome = ? AND c.numero_conta = ?
             """;
 
@@ -97,7 +107,7 @@ public class ContaDAO {
               new Conta(
                   rs.getInt("id_conta"),
                   rs.getString("numero_conta"),
-                  rs.getString("agencia"),
+                  rs.getString("codigo_agencia"),
                   rs.getDouble("saldo"),
                   rs.getString("tipo_conta"),
                   rs.getInt("id_cliente"));
@@ -120,12 +130,13 @@ public class ContaDAO {
   public Conta buscarContaPorNumero(String numeroConta) {
     String query =
         """
-        SELECT c.id_conta, c.numero_conta, c.agencia, c.saldo, c.tipo_conta, c.id_cliente,
+        SELECT c.id_conta, c.numero_conta, a.codigo_agencia, c.saldo, c.tipo_conta, c.id_cliente,
                u.nome AS nome_cliente, u.cpf AS cpf_cliente,
                cc.limite, cc.data_vencimento
         FROM conta c
         INNER JOIN cliente cl ON c.id_cliente = cl.id_cliente
         INNER JOIN usuario u ON cl.id_usuario = u.id_usuario
+        INNER JOIN agencia a ON c.id_agencia = a.id_agencia
         LEFT JOIN conta_corrente cc ON c.id_conta = cc.id_conta
         WHERE c.numero_conta = ?
     """;
@@ -141,7 +152,7 @@ public class ContaDAO {
             new Conta(
                 rs.getInt("id_conta"),
                 rs.getString("numero_conta"),
-                rs.getString("agencia"),
+                rs.getString("codigo_agencia"),
                 rs.getDouble("saldo"),
                 rs.getString("tipo_conta"),
                 rs.getInt("id_cliente"));
@@ -178,5 +189,92 @@ public class ContaDAO {
     } catch (SQLException e) {
       throw new RuntimeException("Erro ao excluir conta: " + e.getMessage(), e);
     }
+  }
+
+  // Buscar todas as contas de um usuário (cliente) pelo id_usuario
+  public List<Conta> buscarContasPorIdUsuario(int idUsuario) {
+    List<Conta> contas = new ArrayList<>();
+    String query =
+        "SELECT c.id_conta, c.numero_conta, a.codigo_agencia, c.saldo, c.tipo_conta, c.id_cliente, u.nome AS nome_cliente, u.cpf AS cpf_cliente, " +
+        "cc.limite, cc.data_vencimento " +
+        "FROM conta c " +
+        "INNER JOIN cliente cl ON c.id_cliente = cl.id_cliente " +
+        "INNER JOIN usuario u ON cl.id_usuario = u.id_usuario " +
+        "INNER JOIN agencia a ON c.id_agencia = a.id_agencia " +
+        "LEFT JOIN conta_corrente cc ON c.id_conta = cc.id_conta " +
+        "WHERE u.id_usuario = ?";
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement ps = connection.prepareStatement(query)) {
+      ps.setInt(1, idUsuario);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        Conta conta = new Conta(
+            rs.getInt("id_conta"),
+            rs.getString("numero_conta"),
+            rs.getString("codigo_agencia"),
+            rs.getDouble("saldo"),
+            rs.getString("tipo_conta"),
+            rs.getInt("id_cliente"));
+        conta.setNomeCliente(rs.getString("nome_cliente"));
+        conta.setCpfCliente(rs.getString("cpf_cliente"));
+        if ("CORRENTE".equalsIgnoreCase(rs.getString("tipo_conta"))) {
+          conta.setLimite(rs.getBigDecimal("limite"));
+          conta.setDataVencimento(rs.getDate("data_vencimento") != null ? rs.getDate("data_vencimento").toString() : "");
+        }
+        contas.add(conta);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao buscar contas do usuário: " + e.getMessage(), e);
+    }
+    return contas;
+  }
+
+  // Realizar depósito
+  public void realizarDeposito(int idConta, double valor, String descricao) {
+    String sql = "INSERT INTO transacao (id_conta_origem, tipo_transacao, valor, descricao) VALUES (?, 'DEPOSITO', ?, ?)";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, idConta);
+      stmt.setDouble(2, valor);
+      stmt.setString(3, descricao);
+      stmt.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao realizar depósito: " + e.getMessage(), e);
+    }
+  }
+
+  // Realizar saque
+  public void realizarSaque(int idConta, double valor, String descricao) {
+    String sql = "INSERT INTO transacao (id_conta_origem, tipo_transacao, valor, descricao) VALUES (?, 'SAQUE', ?, ?)";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, idConta);
+      stmt.setDouble(2, valor);
+      stmt.setString(3, descricao);
+      stmt.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao realizar saque: " + e.getMessage(), e);
+    }
+  }
+
+  // Buscar transações (extrato) de uma conta
+  public List<String> buscarTransacoesPorIdConta(int idConta) {
+    List<String> extrato = new ArrayList<>();
+    String query = "SELECT data_hora, tipo_transacao, valor, descricao FROM transacao WHERE id_conta_origem = ? ORDER BY data_hora DESC";
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement ps = connection.prepareStatement(query)) {
+      ps.setInt(1, idConta);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        Timestamp dataHora = rs.getTimestamp("data_hora");
+        String tipo = rs.getString("tipo_transacao");
+        double valor = rs.getDouble("valor");
+        String descricao = rs.getString("descricao");
+        extrato.add(String.format("%s | %s | R$ %.2f | %s", dataHora, tipo, valor, descricao != null ? descricao : ""));
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao buscar extrato: " + e.getMessage(), e);
+    }
+    return extrato;
   }
 }

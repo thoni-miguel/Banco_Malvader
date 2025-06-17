@@ -24,5 +24,7 @@ public class Usuario {
   private java.sql.Date dataNascimento;
   private String telefone;
   private String tipoUsuario;
-  private String senha;
+  private String senhaHash;
+  private String otpAtivo;
+  private java.sql.Timestamp otpExpiracao;
 }

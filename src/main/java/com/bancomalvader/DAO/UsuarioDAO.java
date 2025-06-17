@@ -36,10 +36,10 @@ public class UsuarioDAO {
       Date dataNascimento,
       String telefone,
       String tipoUsuario,
-      String senha) {
+      String senhaHash) {
     try (Connection conn = DatabaseConnection.getConnection()) {
       String sql =
-          "INSERT INTO usuario (nome, cpf, data_nascimento, telefone, tipo_usuario, senha) "
+          "INSERT INTO usuario (nome, cpf, data_nascimento, telefone, tipo_usuario, senha_hash) "
               + "VALUES (?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       stmt.setString(1, nome);
@@ -47,7 +47,7 @@ public class UsuarioDAO {
       stmt.setDate(3, dataNascimento);
       stmt.setString(4, telefone);
       stmt.setString(5, tipoUsuario);
-      stmt.setString(6, senha);
+      stmt.setString(6, senhaHash);
 
       stmt.executeUpdate();
       ResultSet rs = stmt.getGeneratedKeys();
@@ -90,7 +90,9 @@ public class UsuarioDAO {
             rs.getDate("data_nascimento"),
             rs.getString("telefone"),
             rs.getString("tipo_usuario"),
-            rs.getString("senha"));
+            rs.getString("senha_hash"),
+            rs.getString("otp_ativo"),
+            rs.getTimestamp("otp_expiracao"));
       }
     } catch (SQLException e) {
       throw new RuntimeException("Erro ao buscar usuário: " + e.getMessage(), e);

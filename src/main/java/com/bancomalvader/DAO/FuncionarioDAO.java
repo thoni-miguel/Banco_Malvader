@@ -33,7 +33,7 @@ public class FuncionarioDAO extends UsuarioDAO {
     try (Connection connection = DatabaseConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement(query)) {
       ps.setString(1, funcionario.getCodigoFuncionario());
-      ps.setString(2, funcionario.getCargo());
+      ps.setString(2, funcionario.getCargo().name());
       ps.setInt(3, idUsuario);
 
       ps.executeUpdate();
@@ -47,7 +47,7 @@ public class FuncionarioDAO extends UsuarioDAO {
 
   public Funcionario validarLogin(String username, String password) {
     String sql =
-        "SELECT * FROM funcionario f INNER JOIN usuario u ON f.id_usuario = u.id_usuario WHERE u.nome = ? AND u.senha = ?";
+        "SELECT * FROM funcionario f INNER JOIN usuario u ON f.id_usuario = u.id_usuario WHERE u.nome = ? AND u.senha_hash = ?";
     try (Connection connection = DatabaseConnection.getConnection();
         PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setString(1, username);
@@ -55,16 +55,16 @@ public class FuncionarioDAO extends UsuarioDAO {
       ResultSet rs = stmt.executeQuery();
       if (rs.next()) {
         return new Funcionario(
-            rs.getInt("id_funcionario"),
+            rs.getInt("id_usuario"),
+            rs.getString("nome"),
             rs.getString("codigo_funcionario"),
-            rs.getString("cargo"),
-            rs.getInt("id_usuario"));
+            CargoFuncionario.valueOf(rs.getString("cargo")));
       }
     } catch (SQLException e) {
       e.printStackTrace();
       throw new RuntimeException("Erro ao validar login: " + e.getMessage(), e);
     }
-    return null; // Retorna null se não encontrar o funcionário
+    return null;
   }
 
   public Funcionario buscarFuncionarioPorCodigo(String codigoFuncionario) {
@@ -100,7 +100,7 @@ public class FuncionarioDAO extends UsuarioDAO {
         Funcionario funcionario =
             new Funcionario(
                 rs.getString("codigo_funcionario"),
-                rs.getString("cargo"),
+                CargoFuncionario.valueOf(rs.getString("cargo")),
                 rs.getString("nome_funcionario"),
                 rs.getString("cpf"),
                 rs.getDate("data_nascimento"),
@@ -114,6 +114,6 @@ public class FuncionarioDAO extends UsuarioDAO {
       throw new RuntimeException("Erro ao buscar funcionário por código: " + e.getMessage(), e);
     }
 
-    return null; // Retorna null se nenhum funcionário for encontrado
+    return null;
   }
 }

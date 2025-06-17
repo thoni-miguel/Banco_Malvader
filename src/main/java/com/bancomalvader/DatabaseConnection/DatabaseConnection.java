@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 public class DatabaseConnection {
   private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
 
-  private static final String URL = "jdbc:mysql://localhost:3306/banco_malvader";
+  private static final String URL = "jdbc:mysql://localhost:3306/malvader";
   private static final String USER = "root";
-  private static final String PASSWORD = "";
+  private static final String PASSWORD = "wanok123";
 
   /**
    * Obtém uma conexão com o banco de dados.

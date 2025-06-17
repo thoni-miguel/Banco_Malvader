@@ -53,7 +53,7 @@ public class ConsultaFuncionarioView extends JFrame {
 
     if (funcionarioDetalhes != null) {
       addDetail(detailsPanel, "Código do Funcionário:", funcionarioDetalhes.getCodigoFuncionario());
-      addDetail(detailsPanel, "Cargo:", funcionarioDetalhes.getCargo());
+      addDetail(detailsPanel, "Cargo:", funcionarioDetalhes.getCargo().name());
       addDetail(detailsPanel, "Nome do Funcionário:", funcionarioDetalhes.getNome());
       addDetail(detailsPanel, "CPF do Funcionário:", funcionarioDetalhes.getCpf());
       addDetail(
