@@ -1,6 +1,6 @@
 -- CRIAÇÃO DO BANCO DE DADOS
-CREATE DATABASE IF NOT EXISTS malvadersss;
-USE malvadersss;
+CREATE DATABASE IF NOT EXISTS malvader;
+USE malvader;
 
 -- TABELAS
 

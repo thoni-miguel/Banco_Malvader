@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>2c2a58f8-df2a-4a2d-b84b-e80b108059cf.SCHEMA:malvadersss</OriginalElement>
+  <nodes>
+    <node x="156.0" y="760.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.relatorio</node>
+    <node x="29.0" y="952.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.agencia</node>
+    <node x="46.5" y="1344.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta</node>
+    <node x="-245.5" y="412.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.endereco</node>
+    <node x="272.0" y="964.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.cliente</node>
+    <node x="-138.5" y="1836.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.transacao</node>
+    <node x="-251.0" y="-128.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.usuario</node>
+    <node x="481.5" y="412.5">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.VIEW:malvadersss.vw_movimentacoes_recentes</node>
+    <node x="719.5" y="1660.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_corrente</node>
+    <node x="402.5" y="1672.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_poupanca</node>
+    <node x="357.0" y="1172.5">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.VIEW:malvadersss.vw_resumo_contas</node>
+    <node x="270.0" y="460.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.auditoria</node>
+    <node x="534.0" y="1860.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_investimento</node>
+    <node x="12.0" y="220.0">2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.funcionario</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.cliente" relationship="REFERENCES">
+      <point x="92.75" y="-116.0" />
+      <point x="324.75" y="1160.0" />
+      <point x="372.0" y="1160.0" />
+      <point x="0.0" y="56.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.agencia" relationship="REFERENCES">
+      <point x="-92.75" y="-116.0" />
+      <point x="139.25" y="1320.0" />
+      <point x="132.0" y="1320.0" />
+      <point x="0.0" y="68.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.funcionario" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.usuario" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="172.0" y="200.0" />
+      <point x="-108.0" y="200.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_poupanca" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" relationship="REFERENCES">
+      <point x="0.0" y="-68.0" />
+      <point x="512.0" y="1600.0" />
+      <point x="355.66666666666663" y="1600.0" />
+      <point x="123.66666666666663" y="116.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.relatorio" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.funcionario" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="80.0" y="80.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.agencia" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.endereco" relationship="REFERENCES">
+      <point x="0.0" y="-68.0" />
+      <point x="132.0" y="920.0" />
+      <point x="-148.0" y="920.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.cliente" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.usuario" relationship="REFERENCES">
+      <point x="0.0" y="-56.0" />
+      <point x="372.0" y="940.0" />
+      <point x="452.0" y="940.0" />
+      <point x="452.0" y="200.0" />
+      <point x="-108.0" y="200.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.transacao" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" relationship="REFERENCES">
+      <point x="125.25" y="-104.0" />
+      <point x="237.25" y="1800.0" />
+      <point x="232.0" y="1800.0" />
+      <point x="0.0" y="116.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.funcionario" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.funcionario" relationship="REFERENCES">
+      <point x="-160.0" y="-0.0" />
+      <point x="-28.0" y="300.0" />
+      <point x="-28.0" y="420.0" />
+      <point x="92.0" y="420.0" />
+      <point x="-80.0" y="80.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.endereco" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.usuario" relationship="REFERENCES">
+      <point x="0.0" y="-128.0" />
+      <point x="-148.0" y="200.0" />
+      <point x="-108.0" y="200.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_corrente" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="832.0" y="1640.0" />
+      <point x="512.0" y="1640.0" />
+      <point x="512.0" y="1600.0" />
+      <point x="355.66666666666663" y="1600.0" />
+      <point x="123.66666666666663" y="116.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_investimento" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="672.0" y="1640.0" />
+      <point x="512.0" y="1640.0" />
+      <point x="512.0" y="1600.0" />
+      <point x="355.66666666666663" y="1600.0" />
+      <point x="123.66666666666663" y="116.0" />
+    </edge>
+    <edge source="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.auditoria" target="2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.usuario" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="352.0" y="200.0" />
+      <point x="-108.0" y="200.0" />
+      <point x="0.0" y="128.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.3357664233576642" showDependencies="false" x="375.9999999999999" y="960.0" />
+  <SelectedNodes>
+    <node>2c2a58f8-df2a-4a2d-b84b-e80b108059cf.TABLE:malvadersss.conta_investimento</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
