@@ -102,32 +102,28 @@ public class ContaController {
     }
   }
 
-  public boolean encerrarConta(String nomeCliente, String numeroConta) {
+  public boolean encerrarConta(String numeroConta) {
     try {
-      // DAOs necessários
-      UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-      // Busca a conta pelo nome do cliente e número da conta para localizar o usuário
       ContaDAO contaDAO = new ContaDAO();
-      Conta conta = contaDAO.buscarContaPorNomeENumero(nomeCliente, numeroConta);
+      Conta conta = contaDAO.buscarContaPorNumero(numeroConta);
       if (conta == null) {
         throw new IllegalArgumentException("Conta não encontrada.");
       }
-
-      // Busca o cliente associado à conta
-      ClienteDAO clienteDAO = new ClienteDAO();
-      Cliente cliente = clienteDAO.buscarClientePorId(conta.getCliente().getId());
-      if (cliente == null) {
-        throw new IllegalArgumentException("Cliente não encontrado para a conta especificada.");
+      if (conta.getStatus() == null || !conta.getStatus().name().equals("ATIVA")) {
+        throw new IllegalArgumentException("A conta não está ativa e não pode ser encerrada.");
       }
-
-      // Exclui o usuário principal, o restante será tratado pelo ON DELETE CASCADE
-      usuarioDAO.excluirUsuario(cliente.getIdUsuario());
-
-      return true; // Exclusão bem-sucedida
+      if (conta.getSaldo().compareTo(java.math.BigDecimal.ZERO) > 0) {
+        throw new IllegalArgumentException("A conta possui saldo. Zere o saldo antes de encerrar.");
+      }
+      // Atualiza status para ENCERRADA
+      boolean atualizado = contaDAO.atualizarStatusConta(numeroConta, "ENCERRADA");
+      if (!atualizado) {
+        throw new RuntimeException("Falha ao atualizar status da conta.");
+      }
+      return true;
     } catch (Exception e) {
       e.printStackTrace();
-      return false; // Exclusão falhou
+      return false;
     }
   }
 

@@ -116,59 +116,43 @@ public class MenuFuncionarioView extends JFrame {
         break;
       case "Encerramento de conta":
         if (AdminValidation.validarSenhaAdministrador()) {
-          // Captura nome do cliente e número da conta
-          JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-          inputPanel.add(new JLabel("Nome do Cliente:"));
-          JTextField nomeClienteField = new JTextField();
-          inputPanel.add(nomeClienteField);
-          inputPanel.add(new JLabel("Número da Conta:"));
-          JTextField numeroContaField = new JTextField();
-          inputPanel.add(numeroContaField);
+          // Captura apenas o número da conta
+          String numeroConta = JOptionPane.showInputDialog(
+            this,
+            "Digite o número da conta:",
+            "Encerrar Conta",
+            JOptionPane.QUESTION_MESSAGE);
 
-          int result =
-              JOptionPane.showConfirmDialog(
-                  this,
-                  inputPanel,
-                  "Encerrar Conta",
-                  JOptionPane.OK_CANCEL_OPTION,
-                  JOptionPane.PLAIN_MESSAGE);
+          if (numeroConta == null || numeroConta.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this, "Número da conta não pode estar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+          }
 
-          if (result == JOptionPane.OK_OPTION) {
-            String nomeCliente = nomeClienteField.getText().trim();
-            String numeroConta = numeroContaField.getText().trim();
+          try {
+            ContaController contaController = new ContaController();
+            boolean sucesso = contaController.encerrarConta(numeroConta.trim());
 
-            if (nomeCliente.isEmpty() || numeroConta.isEmpty()) {
-              JOptionPane.showMessageDialog(
-                  this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
-              return;
-            }
-
-            // Exclui conta, cliente e usuário associados
-            try {
-              ContaController contaController = new ContaController();
-              boolean sucesso = contaController.encerrarConta(nomeCliente, numeroConta);
-
-              if (sucesso) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Conta encerrada com sucesso.",
-                    "Sucesso",
-                    JOptionPane.INFORMATION_MESSAGE);
-              } else {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Erro ao encerrar conta. Verifique os dados e tente novamente.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE);
-              }
-            } catch (Exception e) {
+            if (sucesso) {
               JOptionPane.showMessageDialog(
                   this,
-                  "Erro durante o encerramento: " + e.getMessage(),
+                  "Conta encerrada com sucesso.",
+                  "Sucesso",
+                  JOptionPane.INFORMATION_MESSAGE);
+            } else {
+              JOptionPane.showMessageDialog(
+                  this,
+                  "Não foi possível encerrar a conta. Verifique se a conta está ativa e com saldo zerado.",
                   "Erro",
                   JOptionPane.ERROR_MESSAGE);
-              e.printStackTrace();
             }
+          } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Erro durante o encerramento: " + e.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
           }
         }
         break;

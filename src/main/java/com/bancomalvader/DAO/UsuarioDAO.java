@@ -115,4 +115,62 @@ public class UsuarioDAO {
     }
     return false;
   }
+
+  // Gera um novo OTP para o usuário usando a stored procedure
+  public String gerarOtp(int idUsuario) {
+    String otp = null;
+    String call = "CALL gerar_otp(?)";
+    try (Connection conn = DatabaseConnection.getConnection();
+         CallableStatement stmt = conn.prepareCall(call)) {
+      stmt.setInt(1, idUsuario);
+      boolean hasResult = stmt.execute();
+      if (hasResult) {
+        try (ResultSet rs = stmt.getResultSet()) {
+          if (rs.next()) {
+            otp = rs.getString("otp_gerado");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao gerar OTP: " + e.getMessage(), e);
+    }
+    return otp;
+  }
+
+  // Busca o OTP ativo e expiração do usuário
+  public String buscarOtpAtivo(int idUsuario) {
+    String query = "SELECT otp_ativo FROM usuario WHERE id_usuario = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setInt(1, idUsuario);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getString("otp_ativo");
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao buscar OTP ativo: " + e.getMessage(), e);
+    }
+    return null;
+  }
+
+  // Valida o OTP informado pelo usuário
+  public boolean validarOtp(int idUsuario, String otpInformado) {
+    String query = "SELECT otp_ativo, otp_expiracao FROM usuario WHERE id_usuario = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setInt(1, idUsuario);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          String otpAtivo = rs.getString("otp_ativo");
+          Timestamp expira = rs.getTimestamp("otp_expiracao");
+          Timestamp agora = new Timestamp(System.currentTimeMillis());
+          return otpAtivo != null && otpAtivo.equals(otpInformado) && expira != null && agora.before(expira);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao validar OTP: " + e.getMessage(), e);
+    }
+    return false;
+  }
 }

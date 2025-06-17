@@ -4,4 +4,4 @@ public enum CargoFuncionario {
     ESTAGIARIO,
     ATENDENTE,
     GERENTE
-} 
+}

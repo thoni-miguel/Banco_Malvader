@@ -13,6 +13,7 @@ package com.bancomalvader.View;
 
 import com.bancomalvader.DAO.ClienteDAO;
 import com.bancomalvader.DAO.FuncionarioDAO;
+import com.bancomalvader.DAO.UsuarioDAO;
 import com.bancomalvader.Model.Funcionario;
 import com.bancomalvader.Model.Usuario;
 import com.bancomalvader.Util.AdminValidation;
@@ -179,10 +180,23 @@ public final class LoginView extends JFrame {
               FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
               Funcionario funcionario = funcionarioDAO.validarLogin(username, password);
               if (funcionario != null) {
-                // Redireciona para a tela principal de funcionários
-                MenuFuncionarioView menuFuncionarioView = new MenuFuncionarioView(funcionario);
-                menuFuncionarioView.setVisible(true);
-                dispose(); // Fecha a tela de login
+                // Gera OTP
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                String otp = usuarioDAO.gerarOtp(funcionario.getId());
+                JOptionPane.showMessageDialog(this, "Seu OTP é: " + otp, "OTP Gerado", JOptionPane.INFORMATION_MESSAGE);
+                String otpInformado = JOptionPane.showInputDialog(this, "Digite o OTP recebido:", "Autenticação OTP", JOptionPane.QUESTION_MESSAGE);
+                if (otpInformado == null || otpInformado.trim().isEmpty()) {
+                  JOptionPane.showMessageDialog(this, "OTP não informado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                  return;
+                }
+                boolean valido = usuarioDAO.validarOtp(funcionario.getId(), otpInformado.trim());
+                if (valido) {
+                  MenuFuncionarioView menuFuncionarioView = new MenuFuncionarioView(funcionario);
+                  menuFuncionarioView.setVisible(true);
+                  dispose();
+                } else {
+                  JOptionPane.showMessageDialog(this, "OTP inválido ou expirado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
               } else {
                 JOptionPane.showMessageDialog(
                     this,
@@ -195,10 +209,23 @@ public final class LoginView extends JFrame {
               Usuario usuario =
                   clienteDAO.validarLogin(username, password); // Agora retorna um Usuario
               if (usuario != null) {
-                // Redireciona para a tela principal de clientes
-                MenuClienteView menuClienteView = new MenuClienteView(usuario); // Passa o Usuario
-                menuClienteView.setVisible(true);
-                dispose(); // Fecha a tela de login
+                // Gera OTP
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                String otp = usuarioDAO.gerarOtp(usuario.getId());
+                JOptionPane.showMessageDialog(this, "Seu OTP é: " + otp, "OTP Gerado", JOptionPane.INFORMATION_MESSAGE);
+                String otpInformado = JOptionPane.showInputDialog(this, "Digite o OTP recebido:", "Autenticação OTP", JOptionPane.QUESTION_MESSAGE);
+                if (otpInformado == null || otpInformado.trim().isEmpty()) {
+                  JOptionPane.showMessageDialog(this, "OTP não informado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                  return;
+                }
+                boolean valido = usuarioDAO.validarOtp(usuario.getId(), otpInformado.trim());
+                if (valido) {
+                  MenuClienteView menuClienteView = new MenuClienteView(usuario);
+                  menuClienteView.setVisible(true);
+                  dispose();
+                } else {
+                  JOptionPane.showMessageDialog(this, "OTP inválido ou expirado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
               } else {
                 JOptionPane.showMessageDialog(
                     this,

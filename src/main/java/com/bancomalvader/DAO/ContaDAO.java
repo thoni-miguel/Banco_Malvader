@@ -130,7 +130,7 @@ public class ContaDAO {
   public Conta buscarContaPorNumero(String numeroConta) {
     String query =
         """
-        SELECT c.id_conta, c.numero_conta, a.codigo_agencia, c.saldo, c.tipo_conta, c.id_cliente,
+        SELECT c.id_conta, c.numero_conta, a.codigo_agencia, c.saldo, c.tipo_conta, c.id_cliente, c.status,
                u.nome AS nome_cliente, u.cpf AS cpf_cliente,
                cc.limite, cc.data_vencimento
         FROM conta c
@@ -138,7 +138,7 @@ public class ContaDAO {
         INNER JOIN usuario u ON cl.id_usuario = u.id_usuario
         INNER JOIN agencia a ON c.id_agencia = a.id_agencia
         LEFT JOIN conta_corrente cc ON c.id_conta = cc.id_conta
-        WHERE c.numero_conta = ?
+        WHERE c.numero_conta = ? AND c.status = 'ATIVA'
     """;
 
     try (Connection connection = DatabaseConnection.getConnection();
@@ -160,6 +160,12 @@ public class ContaDAO {
         // Dados adicionais
         conta.setNomeCliente(rs.getString("nome_cliente"));
         conta.setCpfCliente(rs.getString("cpf_cliente"));
+
+        // Setar status corretamente
+        String statusStr = rs.getString("status");
+        if (statusStr != null) {
+          conta.setStatus(com.bancomalvader.Model.StatusConta.valueOf(statusStr));
+        }
 
         // Dados da conta corrente
         if ("CORRENTE".equalsIgnoreCase(rs.getString("tipo_conta"))) {
@@ -276,5 +282,19 @@ public class ContaDAO {
       throw new RuntimeException("Erro ao buscar extrato: " + e.getMessage(), e);
     }
     return extrato;
+  }
+
+  // Atualiza o status da conta pelo número da conta
+  public boolean atualizarStatusConta(String numeroConta, String novoStatus) {
+    String sql = "UPDATE conta SET status = ? WHERE numero_conta = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, novoStatus);
+      stmt.setString(2, numeroConta);
+      int rows = stmt.executeUpdate();
+      return rows > 0;
+    } catch (SQLException e) {
+      throw new RuntimeException("Erro ao atualizar status da conta: " + e.getMessage(), e);
+    }
   }
 }
