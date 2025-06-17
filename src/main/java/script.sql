@@ -1,6 +1,6 @@
 -- CRIAÇÃO DO BANCO DE DADOS
-CREATE DATABASE IF NOT EXISTS malvader;
-USE malvader;
+CREATE DATABASE IF NOT EXISTS malvadersss;
+USE malvadersss;
 
 -- TABELAS
 
@@ -155,14 +155,14 @@ CREATE TRIGGER limite_deposito BEFORE INSERT ON transacao
 FOR EACH ROW
 BEGIN
     IF NEW.tipo_transacao = 'DEPOSITO' THEN
-        DECLARE total_dia DECIMAL(15,2);
-        SELECT COALESCE(SUM(valor),0) INTO total_dia
+        SET @total_dia = 0;
+        SELECT COALESCE(SUM(valor),0) INTO @total_dia
         FROM transacao
         WHERE id_conta_origem = NEW.id_conta_origem
           AND tipo_transacao = 'DEPOSITO'
           AND DATE(data_hora) = DATE(NEW.data_hora);
 
-        IF (total_dia + NEW.valor) > 10000 THEN
+        IF (@total_dia + NEW.valor) > 10000 THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Limite diário de depósito excedido';
         END IF;
     END IF;
