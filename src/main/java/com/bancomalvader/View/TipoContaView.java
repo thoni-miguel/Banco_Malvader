@@ -5,9 +5,6 @@
  * <p>Permite aos usuários escolher entre diferentes tipos de contas, como corrente ou poupança,
  * durante o processo de abertura de conta.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

@@ -5,9 +5,6 @@
  * <p>Permite acesso a funcionalidades administrativas e de gerenciamento, como cadastro de
  * clientes, manipulação de contas e consulta de dados de usuários.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

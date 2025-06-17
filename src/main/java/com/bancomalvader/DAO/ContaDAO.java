@@ -6,9 +6,6 @@
  * e consultas no banco de dados. Esta classe serve como base para tipos específicos de contas, como
  * correntes e poupanças.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.DAO;
 

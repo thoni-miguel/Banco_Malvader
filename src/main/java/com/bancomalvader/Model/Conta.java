@@ -4,10 +4,6 @@
  * <p>Fornece atributos e métodos básicos para manipular informações como número da conta, saldo,
  * titular, e operações financeiras. Serve como base para contas específicas como corrente e
  * poupança.
- *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Model;
 

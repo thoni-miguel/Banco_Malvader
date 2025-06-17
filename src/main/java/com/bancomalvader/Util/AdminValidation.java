@@ -5,9 +5,6 @@
  * <p>Fornece métodos para verificar se um usuário tem privilégios administrativos e garantir a
  * segurança de operações restritas.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Util;
 

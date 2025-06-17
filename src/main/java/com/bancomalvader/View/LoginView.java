@@ -5,9 +5,6 @@
  * e direciona para o menu principal após validação bem-sucedida.
  * </p>
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

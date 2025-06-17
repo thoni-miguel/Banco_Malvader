@@ -4,9 +4,6 @@
  *
  * <p>Este controlador fornece métodos para criar, atualizar, remover e consultar clientes.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Controller;
 

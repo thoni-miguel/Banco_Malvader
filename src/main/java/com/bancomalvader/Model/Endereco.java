@@ -3,10 +3,6 @@
  *
  * <p>Contém informações como rua, número, bairro, cidade, estado e CEP, que são usadas para
  * associar clientes e funcionários a locais específicos.
- *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Model;
 

@@ -5,9 +5,6 @@
  * <p>Este controlador fornece métodos para criar, atualizar, autenticar e excluir usuários, além de
  * gerenciar perfis e tipos de usuários no sistema.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Controller;
 

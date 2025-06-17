@@ -5,9 +5,6 @@
  * <p>Fornece métodos para inserir, atualizar, excluir e consultar informações de usuários no banco
  * de dados, incluindo autenticação e gerenciamento de perfis.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.DAO;
 

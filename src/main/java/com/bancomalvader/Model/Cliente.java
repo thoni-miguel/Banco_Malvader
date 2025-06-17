@@ -3,10 +3,6 @@
  *
  * <p>Contém informações pessoais como nome, CPF, endereço e outros dados relevantes para o
  * gerenciamento de clientes no sistema.
- *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.Model;
 

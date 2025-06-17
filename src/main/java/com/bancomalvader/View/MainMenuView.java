@@ -4,9 +4,6 @@
  * <p>Permite a navegação para as diferentes funcionalidades do sistema, como gerenciamento de
  * clientes, contas e funcionários.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

@@ -4,9 +4,6 @@
  * <p>Permite que os usuários insiram as informações necessárias para criar uma nova conta, com
  * validações e feedback visual.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

@@ -5,9 +5,6 @@
  * <p>Permite a visualização e busca de dados dos clientes, exibindo detalhes relevantes de forma
  * organizada.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 

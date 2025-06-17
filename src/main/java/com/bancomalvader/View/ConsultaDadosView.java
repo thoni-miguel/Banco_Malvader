@@ -5,9 +5,6 @@
  * <p>Permite aos usuários visualizarem informações detalhadas sobre clientes, contas ou outras
  * entidades, de acordo com as permissões disponíveis.
  *
- * @author Dérick Rangel
- * @version 1.0
- * @since 2024-11-27
  */
 package com.bancomalvader.View;
 
